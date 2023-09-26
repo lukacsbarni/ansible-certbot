@@ -8,6 +8,11 @@
   vars_files:
     - "{{ option_credentials_file }}"
 
+  pre_tasks:
+    - meta: end_play
+      when: 
+        - option_webserver not in ["standalone", "apache", "nginx"]
+
   roles:
   - role: acme_certbot
     tags: [acme]

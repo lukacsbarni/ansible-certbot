@@ -17,9 +17,9 @@ ansible-lint:
     # - cd cienciaid-shibboleth/ansible/project/
     # - echo "$CI_DEPLOY_USER"
     # - echo "$CI_DEPLOY_PASSWORD"
-    - sed -i "s#https://gitlab.asr.fccn.pt/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml
-    - cat roles/requirements.yml
-    - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
+    - sed -i "s#https://gitlab.asr.fccn.pt/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements_runner.yml
+    - cat roles/requirements_runner.yml
+    - ansible-galaxy install --force -r roles/requirements_runner.yml -p ./roles
   script:
     - ansible-lint -v *.yml
   except:

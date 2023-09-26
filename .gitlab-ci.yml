@@ -15,7 +15,11 @@ ansible-lint:
     # - echo "$ANSIBLE_VAULT" > cienciaid-shibboleth/ansible/project/vault_password_file # create vault password from gitlab variable
     # - chmod 400 cienciaid-shibboleth/ansible/project/vault_password_file
     # - cd cienciaid-shibboleth/ansible/project/
-    - ansible-galaxy install --force -r roles/requirements_runner.yml -p ./roles
+    # - echo "$CI_DEPLOY_USER"
+    # - echo "$CI_DEPLOY_PASSWORD"
+    - sed -i "s#https://gitlab.asr.fccn.pt/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" requirements.yml
+    - cat roles/requirements.yml
+    - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
   script:
     - ansible-lint -v *.yml
   except:

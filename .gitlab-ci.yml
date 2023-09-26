@@ -9,16 +9,7 @@ ansible-lint:
     - ansible
   before_script:
     - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
-    # - cd ..
-    # - rm -rf cienciaid-shibboleth/
-    # - git clone https://$CI_DEPLOY_USER:$CI_DEPLOY_PASSWORD@gitlab.asr.fccn.pt/asr-sid/cienciaid-shibboleth.git
-    # - echo "$ANSIBLE_VAULT" > cienciaid-shibboleth/ansible/project/vault_password_file # create vault password from gitlab variable
-    # - chmod 400 cienciaid-shibboleth/ansible/project/vault_password_file
-    # - cd cienciaid-shibboleth/ansible/project/
-    # - echo "$CI_DEPLOY_USER"
-    # - echo "$CI_DEPLOY_PASSWORD"
-    - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml
-    - cat roles/requirements.yml
+    - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
     - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
   script:
     - ansible-lint -v *.yml

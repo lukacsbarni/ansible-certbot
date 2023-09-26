@@ -9,9 +9,15 @@
     - "{{ option_credentials_file }}"
 
   pre_tasks:
-    - meta: end_play
+    - name: "Check if option_webserver is valid"
       when: 
         - option_webserver not in ["standalone", "apache", "nginx"]
+      block:
+        - name: "option_webserver is not valid"
+          debug:
+            msg: 'Variable is not one of the valid options:  ["standalone", "apache", "nginx"]'
+        - name: "end play"
+          meta: end_play
 
   roles:
   - role: acme_certbot

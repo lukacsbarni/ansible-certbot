@@ -1,4 +1,4 @@
-- src: git+https://$CI_DEPLOY_USER:$CI_DEPLOY_PASSWORD@gitlab.asr.fccn.pt/asr-sid/ansible-roles/acme
+- src: git+https://$CI_DEPLOY_USER:$CI_DEPLOY_PASSWORD@gitlab.asr.fccn.pt/asr-sid/ansible-roles/acme.git
   scm: git
   name: acme_certbot
   version: 1.4.1

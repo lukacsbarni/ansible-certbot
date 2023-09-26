@@ -1,0 +1,36 @@
+image: registry-gitlab.asr.fccn.pt/asr-sid/sid-docker-ansible:v2.13.7
+
+stages:
+  - verify
+
+ansible-lint:
+  stage: verify
+  tags:
+    - ansible
+  before_script:
+    - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
+  script:
+    - ansible-lint -v *.yml
+  except:
+    changes:
+      - README.md
+
+# ansible-syntax-dev:
+#   stage: verify
+#   tags:
+#     - ansible
+#   before_script:
+#     - cd ..
+#     - rm -rf cienciaid-shibboleth/
+#     - git clone https://$CI_DEPLOY_USER:$CI_DEPLOY_PASSWORD@gitlab.asr.fccn.pt/asr-sid/cienciaid-shibboleth.git
+#     - echo "$ANSIBLE_VAULT" > cienciaid-shibboleth/ansible/project/vault_password_file # create vault password from gitlab variable
+#     - chmod 400 cienciaid-shibboleth/ansible/project/vault_password_file
+#     - cd cienciaid-shibboleth/ansible/project/
+#   script:
+#     - ansible-playbook --inventory ../../../cienciaid-inventories/inventories/develop/ --syntax-check main.yml
+#   except:
+#     - master
+#   only:
+#     changes:
+#       - inventories/general_definitions
+#       - inventories/develop/*

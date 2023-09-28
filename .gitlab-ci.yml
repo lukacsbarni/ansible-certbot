@@ -7,12 +7,7 @@ ansible-lint:
   stage: verify
   tags:
     - ansible
-  cache:
-    key: roles-cache-$CI_COMMIT_REF_SLUG
-    paths:
-      - roles/
   before_script:
-    - echo "$CI_COMMIT_REF_SLUG"
     - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
     - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
     - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
@@ -25,15 +20,9 @@ ansible-lint:
 
 ansible-syntax:
   stage: verify
-  needs: ["ansible-lint"]
   tags:
     - ansible
-  cache:
-    key: roles-cache-$CI_COMMIT_REF_SLUG
-    paths:
-      - roles/
   before_script:
-    - echo "$CI_COMMIT_REF_SLUG"
     - ls roles/
   script:
     - ansible-playbook --inventory localhost --syntax-check playbook_acme_ssl.yml

@@ -7,6 +7,10 @@ ansible-lint:
   stage: verify
   tags:
     - ansible
+  cache:
+    key: roles-cache-$CI_COMMIT_REF_SLUG
+    paths:
+      - roles/
   before_script:
     - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
     - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
@@ -18,14 +22,18 @@ ansible-lint:
     changes:
       - README.md
 
-ansible-syntax-dev:
+ansible-syntax:
   stage: verify
   tags:
     - ansible
+  cache:
+    key: roles-cache-$CI_COMMIT_REF_SLUG
+    paths:
+      - roles/
   before_script:
     - ls roles/
   script:
-    - ansible-playbook --inventory localhost --syntax-check main.yml
+    - ansible-playbook --inventory localhost --syntax-check playbook_acme_ssl.yml
   except:
     changes:
       - README.md

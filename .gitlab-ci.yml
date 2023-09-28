@@ -23,6 +23,9 @@ ansible-syntax:
   tags:
     - ansible
   before_script:
+    - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
+    - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
+    - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
     - ls roles/
   script:
     - ansible-playbook --inventory localhost --syntax-check playbook_acme_ssl.yml

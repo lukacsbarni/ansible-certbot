@@ -24,6 +24,7 @@ ansible-lint:
 
 ansible-syntax:
   stage: verify
+  needs: ["ansible-lint"]
   tags:
     - ansible
   cache:

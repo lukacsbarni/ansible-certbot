@@ -11,28 +11,23 @@ ansible-lint:
     - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
     - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
     - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
+    - ls roles/
   script:
     - ansible-lint -v *.yml
   except:
     changes:
       - README.md
 
-# ansible-syntax-dev:
-#   stage: verify
-#   tags:
-#     - ansible
-#   before_script:
-#     - cd ..
-#     - rm -rf cienciaid-shibboleth/
-#     - git clone https://$CI_DEPLOY_USER:$CI_DEPLOY_PASSWORD@gitlab.asr.fccn.pt/asr-sid/cienciaid-shibboleth.git
-#     - echo "$ANSIBLE_VAULT" > cienciaid-shibboleth/ansible/project/vault_password_file # create vault password from gitlab variable
-#     - chmod 400 cienciaid-shibboleth/ansible/project/vault_password_file
-#     - cd cienciaid-shibboleth/ansible/project/
-#   script:
-#     - ansible-playbook --inventory ../../../cienciaid-inventories/inventories/develop/ --syntax-check main.yml
-#   except:
-#     - master
-#   only:
-#     changes:
-#       - inventories/general_definitions
-#       - inventories/develop/*
+ansible-syntax-dev:
+  stage: verify
+  tags:
+    - ansible
+  before_script:
+    - ls roles/
+  script:
+    - ansible-playbook --inventory localhost --syntax-check main.yml
+  except:
+    changes:
+      - README.md
+
+

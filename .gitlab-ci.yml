@@ -2,7 +2,8 @@ image: registry-gitlab.asr.fccn.pt/asr-sid/sid-docker-ansible:v2.13.7
 
 stages:
   # - verify
-  - package
+  - build
+  - upload
 
 # ansible-lint:
 #   stage: verify
@@ -35,8 +36,8 @@ stages:
 #       - README.md
 
 
-create-package:
-  stage: package
+build-package:
+  stage: build
   tags:
     - ansible
   before_script:
@@ -59,9 +60,9 @@ upload-package:
   image: 
     name: rclone/rclone:1.64  # Use the latest Rclone image
     entrypoint: [""]
-  stage: package
+  stage: upload
   dependencies:
-    - create-package
+    - build
   tags:
     - docker
   before_script:

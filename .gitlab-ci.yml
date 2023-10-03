@@ -49,9 +49,14 @@ upload-package:
     - echo ${CI_WEBDAV_USER}
     - echo ${CI_WEBDAV_PASSWORD}
     - which rclone
+    - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
+    - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
+    - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
+    - ls roles/
+    - zip -r certbot_playbook.zip playbook_acme_ssl.yml README.md roles/ 
   script:
     - rclone config create nextcloud webdav url="${CI_WEBDAV_URL}" user="${CI_WEBDAV_USER}" pass="${CI_WEBDAV_PASSWORD}"  # Create the Rclone config for Nextcloud
-    - rclone copy --no-check-certificate $CI_PROJECT_DIR/test_gitlab_file.md nextcloud:content/ACME/  # Replace with the correct paths
+    - rclone copy --no-check-certificate $CI_PROJECT_DIR/certbot_playbook.zip nextcloud:assets/  # Replace with the correct paths
   except:
     changes:
       - README.md

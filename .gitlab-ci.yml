@@ -36,10 +36,15 @@ ansible-syntax:
 
 
 upload-package:
-  image: rclone/rclone:1.64  # Use the latest Rclone image
+  image: rclone/rclone:latest  # Use the latest Rclone image
   stage: upload
   tags:
     - docker
+  before_script:
+    - echo ${CI_WEBDAV_URL}
+    - echo ${CI_WEBDAV_USERNAME}
+    - echo ${CI_WEBDAV_PASSWORD}
+    - which rclones
   script:
     - rclone config create nextcloud webdav url="${CI_WEBDAV_URL}" user="${CI_WEBDAV_USERNAME}" pass="${CI_WEBDAV_PASSWORD}"  # Create the Rclone config for Nextcloud
     - rclone copy $CI_PROJECT_DIR/test_gitlab_file.md nextcloud:content/ACME/  # Replace with the correct paths

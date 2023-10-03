@@ -5,39 +5,41 @@ stages:
   - build
   - upload
 
-# ansible-lint:
-#   stage: verify
-#   tags:
-#     - ansible
-#   before_script:
-#     - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
-#     - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
-#     - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
-#     - ls roles/
-#   script:
-#     - ansible-lint -v *.yml
-#   except:
-#     changes:
-#       - README.md
+ansible-lint:
+  stage: verify
+  tags:
+    - ansible
+  before_script:
+    - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
+    - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
+    - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
+    - ls roles/
+  script:
+    - ansible-lint -v *.yml
+  except:
+    changes:
+      - README.md
 
-# ansible-syntax:
-#   stage: verify
-#   tags:
-#     - ansible
-#   before_script:
-#     - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
-#     - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
-#     - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
-#     - ls roles/
-#   script:
-#     - ansible-playbook --inventory localhost --syntax-check playbook_acme_ssl.yml
-#   except:
-#     changes:
-#       - README.md
+ansible-syntax:
+  stage: verify
+  needs: []
+  tags:
+    - ansible
+  before_script:
+    - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
+    - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
+    - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
+    - ls roles/
+  script:
+    - ansible-playbook --inventory localhost --syntax-check playbook_acme_ssl.yml
+  except:
+    changes:
+      - README.md
 
 
 build-package:
   stage: build
+  needs: []
   tags:
     - ansible
   before_script:
@@ -71,6 +73,7 @@ upload-package:
     - echo ${CI_WEBDAV_PASSWORD}
     - which rclone
   script:
+    - ls
     - rclone config create nextcloud webdav url="${CI_WEBDAV_URL}" user="${CI_WEBDAV_USER}" pass="${CI_WEBDAV_PASSWORD}"  # Create the Rclone config for Nextcloud
     - rclone copy --no-check-certificate $CI_PROJECT_DIR/certbot_playbook.zip nextcloud:assets/  # Replace with the correct paths
   except:

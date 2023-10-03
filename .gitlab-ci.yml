@@ -36,7 +36,9 @@ ansible-syntax:
 
 
 upload-package:
-  image: rclone/rclone:latest  # Use the latest Rclone image
+  image: 
+    name: rclone/rclone:latest  # Use the latest Rclone image
+    entrypoint: [""]
   stage: upload
   variables:
     CI_DEBUG_TRACE: "true"

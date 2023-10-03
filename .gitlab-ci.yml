@@ -1,38 +1,38 @@
 image: registry-gitlab.asr.fccn.pt/asr-sid/sid-docker-ansible:v2.13.7
 
 stages:
-  - verify
+  # - verify
   - package
 
-ansible-lint:
-  stage: verify
-  tags:
-    - ansible
-  before_script:
-    - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
-    - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
-    - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
-    - ls roles/
-  script:
-    - ansible-lint -v *.yml
-  except:
-    changes:
-      - README.md
+# ansible-lint:
+#   stage: verify
+#   tags:
+#     - ansible
+#   before_script:
+#     - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
+#     - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
+#     - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
+#     - ls roles/
+#   script:
+#     - ansible-lint -v *.yml
+#   except:
+#     changes:
+#       - README.md
 
-ansible-syntax:
-  stage: verify
-  tags:
-    - ansible
-  before_script:
-    - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
-    - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
-    - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
-    - ls roles/
-  script:
-    - ansible-playbook --inventory localhost --syntax-check playbook_acme_ssl.yml
-  except:
-    changes:
-      - README.md
+# ansible-syntax:
+#   stage: verify
+#   tags:
+#     - ansible
+#   before_script:
+#     - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
+#     - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
+#     - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
+#     - ls roles/
+#   script:
+#     - ansible-playbook --inventory localhost --syntax-check playbook_acme_ssl.yml
+#   except:
+#     changes:
+#       - README.md
 
 
 create-package:

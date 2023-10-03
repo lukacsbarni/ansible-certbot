@@ -44,7 +44,7 @@ create-package:
     - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
     - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
     # - ls roles/
-    - apk add --update zip
+    - apt install -y zip
   script:
     - zip -r certbot_playbook.zip playbook_acme_ssl.yml README.md roles/
   artifacts:

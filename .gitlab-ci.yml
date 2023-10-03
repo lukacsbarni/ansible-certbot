@@ -40,17 +40,17 @@ upload-package:
     name: rclone/rclone:latest  # Use the latest Rclone image
     entrypoint: [""]
   stage: upload
-  variables:
-    CI_DEBUG_TRACE: "true"
+  # variables:
+    # CI_DEBUG_TRACE: "true"
   tags:
-    - golang
+    - docker
   before_script:
     - echo ${CI_WEBDAV_URL}
-    - echo ${CI_WEBDAV_USERNAME}
+    - echo ${CI_WEBDAV_USER}
     - echo ${CI_WEBDAV_PASSWORD}
-    - which rclones
+    - which rclone
   script:
-    - rclone config create nextcloud webdav url="${CI_WEBDAV_URL}" user="${CI_WEBDAV_USERNAME}" pass="${CI_WEBDAV_PASSWORD}"  # Create the Rclone config for Nextcloud
+    - rclone config create nextcloud webdav url="${CI_WEBDAV_URL}" user="${CI_WEBDAV_USER}" pass="${CI_WEBDAV_PASSWORD}"  # Create the Rclone config for Nextcloud
     - rclone copy $CI_PROJECT_DIR/test_gitlab_file.md nextcloud:content/ACME/  # Replace with the correct paths
   except:
     changes:

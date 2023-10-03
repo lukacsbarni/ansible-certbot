@@ -62,7 +62,7 @@ upload-package:
     entrypoint: [""]
   stage: upload
   dependencies:
-    - build
+    - build-package
   tags:
     - docker
   before_script:

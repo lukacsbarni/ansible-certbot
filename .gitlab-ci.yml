@@ -1,7 +1,7 @@
 image: registry-gitlab.asr.fccn.pt/asr-sid/sid-docker-ansible:v2.13.7
 
 stages:
-  # - verify
+  - verify
   - build
   - upload
 

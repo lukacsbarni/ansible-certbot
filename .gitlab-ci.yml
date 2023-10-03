@@ -38,6 +38,8 @@ ansible-syntax:
 upload-package:
   image: rclone/rclone:latest  # Use the latest Rclone image
   stage: upload
+  variables:
+    CI_DEBUG_TRACE: "true"
   tags:
     - docker
   before_script:

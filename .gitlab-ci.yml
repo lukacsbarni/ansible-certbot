@@ -41,7 +41,7 @@ upload-package:
   variables:
     CI_DEBUG_TRACE: "true"
   tags:
-    - docker
+    - golang
   before_script:
     - echo ${CI_WEBDAV_URL}
     - echo ${CI_WEBDAV_USERNAME}

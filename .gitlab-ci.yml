@@ -48,15 +48,16 @@ build-package:
     - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
     # - ls roles/
     - apt install -y zip
+    - echo "${CI_COMMIT_TAG}"
   script:
-    - zip -r certbot_playbook.zip playbook_acme_ssl.yml README.md roles/ -x roles/requirements.yml
+    - zip -r certbot_playbook_${CI_COMMIT_TAG}.zip playbook_acme_ssl.yml README.md roles/ -x roles/requirements.yml
   artifacts:
     paths:
-      - certbot_playbook.zip
+      - certbot_playbook_${CI_COMMIT_TAG}.zip
     when: on_success
-  except:
-    changes:
-      - README.md
+  only:
+    - tags
+
 
 upload-package:
   image: 
@@ -75,7 +76,6 @@ upload-package:
   script:
     - ls
     - rclone config create nextcloud webdav url="${CI_WEBDAV_URL}" user="${CI_WEBDAV_USER}" pass="${CI_WEBDAV_PASSWORD}"  # Create the Rclone config for Nextcloud
-    - rclone copy --no-check-certificate $CI_PROJECT_DIR/certbot_playbook.zip nextcloud:assets/acme/  # Replace with the correct paths
-  except:
-    changes:
-      - README.md
+    - rclone copy --no-check-certificate $CI_PROJECT_DIR/certbot_playbook_${CI_COMMIT_TAG}.zip nextcloud:assets/acme/  # Replace with the correct paths
+  only:
+    - tags

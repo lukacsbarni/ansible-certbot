@@ -49,7 +49,7 @@ build-package:
     # - ls roles/
     - apt install -y zip
   script:
-    - zip -r certbot_playbook.zip playbook_acme_ssl.yml README.md roles/
+    - zip -r certbot_playbook.zip playbook_acme_ssl.yml README.md roles/ -x roles/requirements.yml
   artifacts:
     paths:
       - certbot_playbook.zip

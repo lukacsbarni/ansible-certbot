@@ -75,7 +75,7 @@ upload-package:
   script:
     - ls
     - rclone config create nextcloud webdav url="${CI_WEBDAV_URL}" user="${CI_WEBDAV_USER}" pass="${CI_WEBDAV_PASSWORD}"  # Create the Rclone config for Nextcloud
-    - rclone copy --no-check-certificate $CI_PROJECT_DIR/certbot_playbook.zip nextcloud:assets/  # Replace with the correct paths
+    - rclone copy --no-check-certificate $CI_PROJECT_DIR/certbot_playbook.zip nextcloud:assets/acme/  # Replace with the correct paths
   except:
     changes:
       - README.md

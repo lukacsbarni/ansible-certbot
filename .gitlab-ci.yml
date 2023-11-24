@@ -50,7 +50,7 @@ build-package:
     - apt install -y zip
     - echo "${CI_COMMIT_TAG}" > version
   script:
-    - zip -r certbot_playbook_${CI_COMMIT_TAG}.zip playbook_acme_ssl.yml README.md version roles/ -x roles/requirements.yml
+    - zip -r certbot_playbook_${CI_COMMIT_TAG}.zip playbook_acme_ssl.yml README.md version roles/ defaults/ -x roles/requirements.yml
   artifacts:
     paths:
       - certbot_playbook_${CI_COMMIT_TAG}.zip

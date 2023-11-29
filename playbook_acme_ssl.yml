@@ -3,8 +3,6 @@
 - hosts: all
   become: yes
   become_method: sudo
-  vars:
-    option_credentials_file: "defaults/template.yml" 
   vars_files:
     - "{{ option_credentials_file }}"
 

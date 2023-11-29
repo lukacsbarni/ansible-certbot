@@ -55,14 +55,14 @@ Depois de seguido o procedimento detalhado na [Secção anterior](https://share.
 
 <span class="hljs-attr">acme_accounts:</span>
   <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">&lt;serviço&gt;</span> <span class="hljs-comment">#exemplo: "CIENCIA ID"</span>
-    <span class="hljs-attr">server:</span> <span class="hljs-string">https://acme.sectigo.com/v2/OV</span>
+      <span class="hljs-attr">server:</span> <span class="hljs-string">https://acme.sectigo.com/v2/OV</span>
     <span class="hljs-attr">mac_id:</span> <span class="hljs-string">&lt;credencial_eab_hmac_id&gt;</span>
     <span class="hljs-attr">mac_key:</span> <span class="hljs-string">&lt;credencial_eab_hmac_key&gt;</span></code></pre>
   </details>
 
 <p></p>
 
-<!-- ```yaml
+```yaml
 contact_email: <contact_fccn> #exemplo: joao.guerreiro@fccn.pt
 
 acme_accounts: 
@@ -70,7 +70,7 @@ acme_accounts:
     server: https://acme.sectigo.com/v2/OV
     mac_id: <credencial_eab_hmac_id>
     mac_key: <credencial_eab_hmac_key>
-``` -->
+```
 
 O pacote permite a existência de diferentes conjuntos de credenciais (por exemplo, associados a diferentes serviços/domínios), podendo ser colocados no ficheiro ``credentials.yml`` numa lista.
 Cada conjunto de credenciais deve estar associado a um nome (por exemplo, *eduroam*, *rctsaai*, *etc.*) que será fornecido no momento de execução do pacote para escolha das credenciais a utilizar.

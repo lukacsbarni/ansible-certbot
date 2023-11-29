@@ -49,18 +49,7 @@ O cliente de ACME (``certbot``) necessita de credenciais *EAB* associadas a uma 
 
 Depois de seguido o procedimento detalhado na [Secção anterior](https://share.fccn.pt/sites/rctscertificados/ACME/acme_internal_fccn/#page-toc-9), as credenciais recebidas devem ser colocadas num ficheiro *YAML*, por exemplo ``defaults/credentials.yml``, que deve ser construído seguindo a sintaxe exemplificada em ``defaults/template.yml``:
 
-<details>
-  <summary>Clique aqui para ver exemplo do ficheiro <code>defaults/template.yml</code>.</summary>
-<pre><code class="language-yaml hljs"><span class="hljs-attr">contact_email:</span> <span class="hljs-string">&lt;contact_fccn&gt;</span> <span class="hljs-comment">#exemplo: joao.guerreiro@fccn.pt</span>
-
-<span class="hljs-attr">acme_accounts:</span>
-  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">&lt;serviço&gt;</span> <span class="hljs-comment">#exemplo: "CIENCIA ID"</span>
-      <span class="hljs-attr">server:</span> <span class="hljs-string">https://acme.sectigo.com/v2/OV</span>
-    <span class="hljs-attr">mac_id:</span> <span class="hljs-string">&lt;credencial_eab_hmac_id&gt;</span>
-    <span class="hljs-attr">mac_key:</span> <span class="hljs-string">&lt;credencial_eab_hmac_key&gt;</span></code></pre>
-  </details>
-
-<p></p>
+Ver abaixo exemplo do ficheiro ``defaults/template.yml``:
 
 ```yaml
 contact_email: <contact_fccn> #exemplo: joao.guerreiro@fccn.pt
@@ -87,97 +76,41 @@ O pacote fornecido consiste num *playbook* de *Ansible* que irá efetuar sempre 
 
 **O *playbook* de Ansible permite que sejam fornecidos 7 argumentos:**
 
-
-<details>
-  <summary><b>option_acme_account_name</b></summary>
-  <ul>
-    <li><strong>Obrigatório</strong>.</li>
-    <li>Nome das credenciais <em>ACME</em> a utilizar. Deve corresponder a um valor existente no ficheiro<code>defaults/credentials.yml</code>.</li>
-    <li><em>Exemplo: <code>option_acme_account_name='eduroam'</code></em></li>
-  </ul>
-</details>
-
-<details>
-  <summary><b>option_common_names_list</b></summary>
-  <ul>
-    <li><strong>Obrigatório</strong>.</li>
-    <li>lista de <em>common-names</em>, separados por vírgulas. Para cada <em>common-name</em> será gerado um (ou vários, dependendo do valor de <code>option_multi_domain</code>) certificado(s) <em>SSL</em> do tipo <em>OV</em>.</li>
-    <li><em>Exemplo: <code>option_common_names_list='teste1.eduroam.pt,teste2.eduroam.pt'</code></em></li>
-  </ul>
-</details>
-
-<details>
-  <summary><b>option_credentials_file</b></summary>
-  <ul>
-    <li><em>Opcional (default: <code>'defaults/credentials_sid.yml'</code>)</em>.</li>
-    <li>Caminho para o ficheiro com as credenciais <b>ACME</b>.</li>
-    <li><em>Exemplo: <code>option_credentials_file='defaults/credentials_sid.yml'</code></em></li>
-  </ul>
-</details>
-
-<details>
-  <summary><b>option_multi_domain</b></summary>
-  <ul>
-    <li><em>Opcional (default: <code>'single-domain'</code>)</em>.</li>
-    <li>Valores permitidos:
-      <ul>
-        <li><code>single-domain</code></li>
-        <li><code>multi-domain</code></li>
-      </ul>
-    </li>
-    <li>Permite selecionar se se pretende um certificado <b>single-domain</b> por cada <em>common-name</em> ou um único certificado <b>multi-domain</b> com todos os <em>common-names</em> fornecidos.</li>
-    <li><em>Exemplo: <code>option_multi_domain='single-domain'</code></em></li>
-  </ul>
-</details>
-
-<details>
-  <summary><b>option_post_hook</b></summary>
-  <ul>
-    <li><em>Opcional (default: <code>''</code>)</em>.</li>
-    <li>Permite definir uma ação (comando, <em>script</em>, <em>etc.</em>) a executar sempre que existe uma nova versão de um certificado. Um exemplo pode ser reiniciar o servidor <em>web</em> (<em>e.g., apache, nginx, etc.</em>) após renovação de certificados.</li>
-    <li><em>Exemplo: <code>option_post_hook='service apache2 reload'</code></em></li>
-  </ul>
-</details>
-
-<details>
-  <summary><b>option_webserver</b></summary>
-  <ul>
-    <li><em>Opcional (default: <code>'standalone'</code>)</em>.</li>
-    <li>Permite definir o servidor <em>web</em> a ser usado para comunicar com a <b>CA</b>.</li>
-    <li><em>Exemplo: <code>option_webserver='standalone'</code></em></li>
-  </ul>
-</details>
-
-<details>
-  <summary><b>option_encryption_algorithm</b></summary>
-  <ul>
-    <li><em>Opcional (default: <code>'ecdsa'</code>)</em>.</li>
-    <li>Permite definir o algoritmo de encriptação usado.</li>
-    <li><em>Exemplo: <code>option_encryption_algorithm='ecdsa'</code></em></li>
-  </ul>
-</details>
-
-<details>
-  <summary><b>option_concatenate_certs</b></summary>
-  <ul>
-    <li><em>Opcional (default: <code>'False'</code>)</em>.</li>
-    <li>Permite gerar, para além dos ficheiros habituais, um ficheiro que agrega o certificado gerado e a chave privada. Util para algumas aplicações, como por exemplo <em>Haproxy.</em></li>
-    <li><em>Exemplo: <code>option_concatenate_certs='False'</code></em></li>
-  </ul>
-</details>
-<!-- * ``option_acme_account_name``: 
-  * **Obrigatório**.
-  * Nome das credenciais *ACME* a utilizar. Deve corresponder a um valor existente no ficheiro``defaults/credentials.yml``.
-  * *Exemplo: ``option_acme_account_name='eduroam'``*
-* ``option_common_names_list``: 
-  * **Obrigatório**.
-  * lista de *common-names*, separados por vírgulas. Para cada *common-name* será gerado um certificado *SSL* do tipo *OV*.
-  * *Exemplo: ``option_common_names_list='teste1.eduroam.pt,teste2.eduroam.pt'``*
-* ``option_credentials_file``: 
-* ``option_multi_domain``:
-* ``option_post_hook``: -->
-
-<p></p>
+* **option_acme_account_name:**
+    * **Obrigatório**
+    * Nome das credenciais *ACME* a utilizar. Deve corresponder a um valor existente no ficheiro``defaults/credentials.yml``
+    * *Exemplo: ``option_acme_account_name='eduroam'``*
+* **option_common_names_list:**
+    * **Obrigatório**
+    * lista de *common-names*, separados por vírgulas. Para cada *common-name* será gerado um (ou vários, dependendo do valor de ``option_multi_domain``) certificado(s) *SSL* do tipo *OV*.
+    * *Exemplo: ``option_common_names_list='teste1.eduroam.pt,teste2.eduroam.pt'``*
+* **option_credentials_file:**
+    * *Opcional (default: ``'defaults/credentials_sid.yml'``)*.
+    * Caminho para o ficheiro com as credenciais **ACME**.
+    * *Exemplo: ``option_credentials_file='defaults/credentials_sid.yml'``**
+* **option_credentials_file:**
+    * *Opcional (default: ``'single-domain'``)*.
+    * Valores permitidos:
+        * ``single-domain``
+        * ``multi-domain``
+    * Permite selecionar se se pretende um certificado **single-domain** por cada *common-name* ou um único certificado **multi-domain** com todos os *common-names* fornecidos.
+    * *Exemplo: ``option_multi_domain='single-domain'``*
+* **option_post_hook:**
+    * *Opcional (default: ``''``)*.
+    * Permite definir uma ação (comando, *script*, *etc.*) a executar sempre que existe uma nova versão de um certificado. Um exemplo pode ser reiniciar o servidor *web* (*e.g., apache, nginx, etc.*) após renovação de certificados.
+    * *Exemplo: ``option_post_hook='service apache2 reload'``*
+* **option_webserver:**
+    * *Opcional (default: ``'standalone'``)*.
+    * Permite definir o servidor *web* a ser usado para comunicar com a **CA**.
+    * *Exemplo: ``option_webserver='standalone'``*
+* **option_encryption_algorithm:**
+    * *Opcional (default: ``'ecdsa'``)*.
+    * Permite definir o algoritmo de encriptação usado.
+    * *Exemplo: ``option_encryption_algorithm='ecdsa'``*
+* **option_concatenate_certs:**
+    * *Opcional (default: ``'False'``)*.
+    * Permite gerar, para além dos ficheiros habituais, um ficheiro que agrega o certificado gerado e a chave privada. Util para algumas aplicações, como por exemplo *Haproxy.*
+    * *Exemplo: ``option_concatenate_certs='False'``*
 
 Uma vez clonado o repositório, e devidamente configurado o ficheiro ``defaults/credentials.yml``, o *playbook* de *Ansible* pode ser executado de uma de duas formas: 
 1. **Localmente**.

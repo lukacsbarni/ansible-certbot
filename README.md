@@ -2,7 +2,7 @@
 
 Como forma de promover a adopção da utilização do protocolo **ACME** na comunidade **RCTS**, a **FCCN** disponibiliza um pacote de *Ansible* que permite instalar e configurar um **cliente de ACME** para servidores *Linux*, especificamente o cliente [**certbot**](https://certbot.eff.org/).
 
-### 4.1. Pré-requisitos - Antes de executar o playbook de *Ansible*
+### 1. Pré-requisitos - Antes de executar o playbook de *Ansible*
 
 Um elemento essencial para a utilização do processo de gestão automática de certificados é a existência de contas ACME, particularmente da *Sectigo*.
 A gestão destas contas, nomeadamente a sua criação, alteração ou remoção é da responsabilidade do grupo **SID** da **Área ASR**.
@@ -11,7 +11,7 @@ A gestão destas contas, nomeadamente a sua criação, alteração ou remoção 
 
 Os passos a serem seguidos para o pedido de uma dessas contas encontram-se descrito abaixo:
 
-#### 4.1.1. Envio da mensagem de pedido de criação de conta
+#### 1.1. Envio da mensagem de pedido de criação de conta
 A criação da conta **ACME** requer alguns pressupostos obrigatórios. 
 1. **O primeiro é que as credenciais geradas sejam transmitidas de forma segura.**
 Para isso, o requerente da conta deverá ter a utilização de certificados de assinatura de email ativa e a funcionar.
@@ -30,20 +30,20 @@ Importa destacar que devem ser fornecidas as informações presentes no template
 Relativamente aos domínios a associar, por questões de segurança, deve ser usado o mais específico possível dentro do serviço (por exemplo, deve ser pedido  *eduroam.fccn.pt* e não *fccn.pt*);
 <!-- * Se necessário podem indicar um wild-card de um subdomínio, evitando um domínio de topo (ex: *.eduroam.fccn.pt e não*.fccn.pt); -->
 
-#### 4.1.2. Criação da conta por parte da equipa de SID
+#### 1.2. Criação da conta por parte da equipa de SID
 
 Ao receber o pedido de criação de conta, a equipa de **SID** irá aceder à plataforma da *Sectigo* e realizar os passos necessários para a criação da conta, tendo em consideração a informação fornecida.
 
-#### 4.1.3. Resposta com os dados da conta a serem usados (email cifrado e assinado)
+#### 1.3. Resposta com os dados da conta a serem usados (email cifrado e assinado)
 
 Após a criação da conta, e com os dados já presentes, a equipa de **SID** irá responder à mensagem original, indicando as credenciais *EAB* associadas a uma conta **ACME** (``hmac_id`` e ``hmac_key``).
 Recordamos que a mensagem a enviar será cifrada e portanto dirigida apenas ao requerente original.
 Se possível a mensagem recebida deverá ser eliminada após salvaguarda das credenciais em local seguro e apropriado (por exemplo, *num inventário Ansible através de Ansible-Vault, como será detalhado na secção seguinte*).
 Do lado da equipa **SID** a mensagem enviada será também eliminada, uma vez que caso seja necessário recuperar os dados de acesso à conta **ACME**, estes estão acessíveis dentro da plataforma da *Sectigo*.
 
-### 4.2. *Playbook* de Ansible
+### 2. *Playbook* de Ansible
 
-#### 4.2.1. Inventário - Credenciais ACME
+#### 2.1. Inventário - Credenciais ACME
 
 O cliente de ACME (``certbot``) necessita de credenciais *EAB* associadas a uma conta ACME (``hmac_id`` e ``hmac_key``), pelo que antes da execução do pacote de *Ansible*.
 
@@ -66,7 +66,7 @@ Cada conjunto de credenciais deve estar associado a um nome (por exemplo, *eduro
 
 As credenciais podem ser encriptadas utilizando o [*Ansible Vault*](https://docs.ansible.com/ansible/latest/vault_guide/index.html).
 
-#### 4.2.2. Executar o *playbook*
+#### 2.2. Executar o *playbook*
 
 O pacote fornecido consiste num *playbook* de *Ansible* que irá efetuar sempre as seguintes etapas:
 
@@ -122,7 +122,7 @@ A execução local pode ser feita com o seguinte comando:
 shell> ansible-playbook playbook_acme_ssl.yml --extra-vars "option_acme_account_name='eduroam' option_common_names_list='teste1.eduroam.pt,teste2.eduroam.pt' option_credentials_file='defaults/credentials_sid.yml' option_multi_domain='single-domain' option_post_hook='service apache2 reload'"
 ```
 
-### 4.3 Estado Final
+### 3. Estado Final
 
 Após execução do pacote, deverá ser criada a directoria ``/etc/letsencrypt/`` com a seguinte estrutura:
 

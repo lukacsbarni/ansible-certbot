@@ -55,6 +55,7 @@ release-branch:
     - git fetch
     - git config user.name "CI Pipeline"
     - git config user.email "cipipeline@asr.fccn.pt"
+    - git add *
     - git stash
     - git checkout releases
     - git stash pop

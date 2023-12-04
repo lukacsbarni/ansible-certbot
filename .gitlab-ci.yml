@@ -47,13 +47,14 @@ release-branch:
     - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
     - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
   script:
-    - git config user.name "CI Pipeline"
-    - git config user.email "cipipeline@asr.fccn.pt"
+    - git fetch
+    # - git config user.name "CI Pipeline"
+    # - git config user.email "cipipeline@asr.fccn.pt"
     - git stash
     - git checkout releases
     - git stash pop
     - git add .
-    - git commit -m "commit changes for tag ${CI_COMMIT_TAG}"
+    - git commit -m "commit changes for tag ${CI_COMMIT_TAG}" -o ci.skip
     - git push origin releases
   artifacts:
     paths:

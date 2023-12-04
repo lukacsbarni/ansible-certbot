@@ -53,9 +53,10 @@ release-branch:
   script:
     - git remote set-url origin https://${CI_TOKEN_USER}:${CI_TOKEN_PASS}@gitlab.asr.fccn.pt/asr/asr-certbot.git
     - git fetch
+    - git pull
     - git config user.name "CI Pipeline"
     - git config user.email "cipipeline@asr.fccn.pt"
-    - git add *
+    - git add --all
     - git stash
     - git checkout releases
     - git stash pop

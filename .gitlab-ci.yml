@@ -47,7 +47,7 @@ release-branch:
     - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
     - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
   script:
-    - git remote add origin https://${CI_TOKEN_USER}:${CI_TOKEN_PASS}@gitlab.asr.fccn.pt/asr/asr-certbot.git
+    - git remote set-url origin https://${CI_TOKEN_USER}:${CI_TOKEN_PASS}@gitlab.asr.fccn.pt/asr/asr-certbot.git
     - git fetch
     - git config user.name "CI Pipeline"
     - git config user.email "cipipeline@asr.fccn.pt"

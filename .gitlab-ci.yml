@@ -54,7 +54,7 @@ release-branch:
     - git checkout releases
     - git stash pop
     - git add .
-    - git commit -m "commit changes for tag ${CI_COMMIT_TAG}" -o ci.skip
+    - git commit -m "commit changes for tag ${CI_COMMIT_TAG}"
     - git push origin releases
   artifacts:
     paths:

@@ -1,0 +1,23 @@
+---
+# tasks file for acme
+
+# acme-users
+##############################
+- name: "acme-users"
+  import_tasks: acme-users.yml
+  tags:
+    - acme-users
+
+# Install Stuff
+##############################
+- name: "acme certbot install tasks"
+  import_tasks: install-certbot.yml
+  tags:
+    - install
+
+# certificates configuration
+##############################
+- name: "certificates"
+  import_tasks: acme-certificates.yml
+  tags:
+    - certificates

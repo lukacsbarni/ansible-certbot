@@ -1,0 +1,43 @@
+---
+
+- name: "Register acme account"
+  command:
+    cmd: "/snap/bin/certbot register -m {{ contact_email }} --server {{ acme_account['server'] }} --eab-kid {{ acme_account['mac_id'] }} --eab-hmac-key={{ acme_account['mac_key'] }} --agree-tos --non-interactive"
+    creates: /etc/letsencrypt/accounts/acme.sectigo.com
+
+# Config for multiple CNs - One Single-domain per Certificate
+##############################
+- name: "go through CN given as argument - One Single-domain per Certificate"
+  include_tasks: acme-single-cn.yml
+  vars:
+    dir_name: "{{ common_name }}"
+  loop: "{{ option_common_names_list.split(',') }}"
+  loop_control:
+    loop_var: common_name
+  when: 
+    - option_multi_domain is defined
+    - option_multi_domain == "single-domain"
+    
+
+# Config for multiple CNs - Single Multi-domain certificate
+##############################
+- name: "get Single certificate - Multi-domain Certificate"
+  include_tasks: acme-single-cn.yml
+  vars:
+    common_name:  "{{ option_common_names_list }}"
+    dir_name: "{{ option_common_names_list.split(',')[0] }}"
+  when: 
+    - option_multi_domain is defined
+    - option_multi_domain == "multi-domain"
+    
+# Add renewal script
+##############################
+- name: "Add renewal deploy-hook script"
+  template:
+    src: certsrenew.sh.j2
+    dest: /etc/letsencrypt/renewal-hooks/deploy/certsrenew.sh
+    mode: 0664
+  when: 
+    - option_post_hook is defined
+    - option_post_hook != None
+    - option_post_hook | length > 0

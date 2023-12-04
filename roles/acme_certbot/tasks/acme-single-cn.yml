@@ -1,0 +1,66 @@
+---
+
+- name: "set fact domains"
+  set_fact:
+    domains: "{{ common_name }}"
+
+- name: "set fact domains"
+  set_fact:
+    domains: "{{ common_name }},{{ alt_names | join(',') }}"
+  when: 
+    - alt_names is defined
+    - alt_names | length>0
+
+- name: "debug domains"
+  debug:
+    var: domains
+    verbosity: 1
+
+- name: "Request certificate from CA"
+  command:
+    cmd: "/snap/bin/certbot certonly -m {{ contact_email }} --server {{ acme_account['server'] }} --key-type {{ option_encryption_algorithm }} --domain {{ domains }} --eab-kid {{ acme_account['mac_id'] }} --eab-hmac-key={{ acme_account['mac_key'] }} --{{ option_webserver }} --agree-tos --non-interactive"
+    creates: "/etc/letsencrypt/archive/{{ dir_name }}"
+
+- name: "create single file with cert and key (eg, for haproxy)"
+  when:
+    - option_concatenate_certs|bool
+  block:
+    - name: "set fact input files"
+      set_fact:
+        input_files:
+          - "/etc/letsencrypt/live/{{ dir_name }}/privkey.pem"
+          - "/etc/letsencrypt/live/{{ dir_name }}/fullchain.pem"
+          
+    - name: "read files"
+      command: awk 1 {{ input_files | join(' ') }}
+      register: certs_contents
+      changed_when: false
+
+    - name: "create pem file"
+      copy:
+        dest: "/etc/letsencrypt/live/{{ dir_name }}/concatenated.pem"
+        content: "{{ certs_contents.stdout_lines | join('\n') }}"
+        mode: 0644
+
+- name: "Grant group ssl-cert read access to key"
+  ansible.posix.acl:
+    path: "/etc/letsencrypt/live/{{ dir_name }}/privkey.pem"
+    entity: ssl-cert
+    etype: group
+    permissions: r
+    state: present
+  when: ansible_os_family == 'Debian' 
+    
+- name: "Grant group ssl-cert read access to key path"
+  ansible.posix.acl:
+    path: "{{ item }}"
+    entity: ssl-cert
+    etype: group
+    permissions: x
+    state: present
+  with_items:
+    - "/etc/letsencrypt/live"
+    - "/etc/letsencrypt/live/{{ dir_name }}"
+    - "/etc/letsencrypt/archive"
+    - "/etc/letsencrypt/archive/{{ dir_name }}"
+  when: ansible_os_family == 'Debian' 

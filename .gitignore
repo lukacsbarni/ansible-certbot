@@ -1,0 +1,4 @@
+- src: git+https://gitlab-ci-token:qksYcqzye2h6vHUPjGy9@gitlab.asr.fccn.pt/asr-sid/ansible-roles/acme
+  scm: git
+  name: acme_certbot
+  version: 1.5.2

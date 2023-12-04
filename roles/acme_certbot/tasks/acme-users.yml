@@ -1,0 +1,32 @@
+---
+
+- name: "debug acme_accounts"
+  debug:
+    var: acme_accounts
+    verbosity: 1
+
+- name: "Set fact acme_account"
+  set_fact:
+    acme_account: "{{ item }}"
+  loop:  "{{ acme_accounts }}"
+  when: item.name == option_acme_account_name
+  no_log: true
+
+- name: "end if acme_account not defined"
+  fail: 
+    msg: "ACME account not found. Please fix credentials.yml"
+  when: acme_account is not defined
+  
+- name: "debug acme_account"
+  debug:
+    var: acme_account
+    verbosity: 1
+
+- name: "hmac_key_id"
+  debug:
+    var: acme_account['mac_id']
+    verbosity: 1
+- name: "hmac_key"
+  debug:
+    var: acme_account['mac_key']
+    verbosity: 1

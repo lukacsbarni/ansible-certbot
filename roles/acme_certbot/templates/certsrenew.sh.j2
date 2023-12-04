@@ -1,0 +1,4 @@
+#!/bin/bash
+{% for hook in option_post_hook.split(',') %}
+{{ hook }}
+{% endfor %}

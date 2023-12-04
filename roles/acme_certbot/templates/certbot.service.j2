@@ -1,0 +1,12 @@
+[Unit]
+Description=Certbot
+Documentation=file:///usr/share/doc/python-certbot-doc/html/index.html
+Documentation=https://letsencrypt.readthedocs.io/en/latest/
+[Service]
+Type=oneshot
+{% if option_post_hook is defined and option_post_hook|length  %}
+ExecStart=/snap/bin/certbot -q renew --deploy-hook "/etc/letsencrypt/renewal-hooks/deploy/certsrenew.sh" --post-hook "/usr/bin/setfacl -m g:ssl-cert:r /etc/letsencrypt/archive/*/privkey*.pem"
+{% else %}
+ExecStart=/snap/bin/certbot -q renew --post-hook "/usr/bin/setfacl -m g:ssl-cert:r /etc/letsencrypt/archive/*/privkey*.pem"
+{% endif %}
+PrivateTmp=true

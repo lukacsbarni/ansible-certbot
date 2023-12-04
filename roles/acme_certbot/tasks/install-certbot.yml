@@ -1,0 +1,81 @@
+---
+
+- name: "Install ssl mod"
+  package:
+    state: present
+    name:
+      - ssl-cert
+    update_cache: true
+  when: ansible_os_family == 'Debian' 
+
+- name: "Install ssl mod"
+  package:
+    state: present
+    name:
+      - mod_ssl
+    update_cache: true
+  when: ansible_os_family == 'RedHat' or ansible_os_family == 'CentOS'
+
+- name: "Install snapd"
+  package:
+    state: present
+    name:
+      - snapd
+      - acl
+    update_cache: true
+
+- name: "Create a symbolic link for snap"
+  file:
+    src: /var/lib/snapd/snap
+    dest: /snap
+    state: link
+  when: ansible_os_family == 'RedHat' or ansible_os_family == 'CentOS'
+
+- name: "Make sure a snapd is running"
+  systemd:
+    state: started
+    name: snapd
+
+- name: "Install snap core"
+  community.general.snap:
+    name:
+      - core
+    classic: true
+  retries: 5
+  delay: 10
+
+- name: "Install certbot with snapd"
+  community.general.snap:
+    name: 
+      - certbot
+    classic: true
+
+- name: "Create softlink to certbot"
+  file:
+    src: "/snap/bin/certbot"
+    dest: "/usr/bin/certbot"
+    state: link 
+
+- name: "Copy systemd service files"
+  template:
+    src: "certbot.service.j2"
+    dest: "/etc/systemd/system/certbot.service"
+    mode: "0644"
+    owner: "root"
+    group: "root"
+  notify: "restart certbot service"
+
+- name: "Copy systemd timer files"
+  copy:
+    src: "files/certbot.timer"
+    dest: "/etc/systemd/system/certbot.timer"
+    mode: "0644"
+    owner: "root"
+    group: "root"
+  notify: "restart certbot service"
+
+- name: "enable certbot.timer and restart"
+  systemd:
+    name: certbot.timer
+    enabled: yes
+    state: started

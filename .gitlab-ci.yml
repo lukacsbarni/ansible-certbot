@@ -57,13 +57,13 @@ release-branch:
     - git config user.email "cipipeline@asr.fccn.pt"
     - git add --all
     - git stash
-    - git checkout releases
+    - git checkout 'mirror-github'
     # - git stash pop
     - git merge --squash -Xtheirs stash
-    - git pull origin releases
+    - git pull origin 'mirror-github'
     - git add --all -- :!roles/requirements.yml
     - git commit -m "commit changes for tag ${CI_COMMIT_TAG}"
-    - git push origin releases
+    - git push origin 'mirror-github'
   only:
     - tags
 

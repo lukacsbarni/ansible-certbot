@@ -4,6 +4,7 @@ stages:
   - verify
   - build
   - upload
+  - branch
 
 ansible-lint:
   stage: verify
@@ -36,6 +37,30 @@ ansible-syntax:
     changes:
       - README.md
 
+release-branch:
+  stage: branch
+  needs: []
+  tags:
+    - ansible
+  before_script:
+    - export ANSIBLE_HOST_KEY_CHECKING=False # disable host key checking for ansible
+    - sed -i "s#ssh://git@gitlab.asr.fccn.pt:2224/#https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.asr.fccn.pt/#g" roles/requirements.yml #change protocol of requiremnts and insert Job Token for authentication
+    - ansible-galaxy install --force -r roles/requirements.yml -p ./roles
+  script:
+    - git config user.name "CI Pipeline"
+    - git config user.email "cipipeline@asr.fccn.pt"
+    - git stash
+    - git checkout releases
+    - git stash pop
+    - git add .
+    - git commit -m "commit changes for tag ${CI_COMMIT_TAG}"
+    - git push origin releases
+  artifacts:
+    paths:
+      - certbot_playbook_${CI_COMMIT_TAG}.zip
+    when: on_success
+  only:
+    - tags
 
 build-package:
   stage: build

@@ -4,50 +4,26 @@ Como forma de promover a adopção da utilização do protocolo **ACME** na comu
 
 ### 1. Pré-requisitos - Antes de executar o playbook de *Ansible*
 
-Um elemento essencial para a utilização do processo de gestão automática de certificados é a existência de contas ACME, particularmente da *Sectigo*.
-A gestão destas contas, nomeadamente a sua criação, alteração ou remoção é da responsabilidade do grupo **SID** da **Área ASR**.
+Um elemento essencial para a utilização do processo de gestão automática de certificados é a existência de contas ACME, neste caso na entidade certificadora (CA) da *Sectigo*.
+
+#### 1.1. FCCN
+A gestão interna destas contas, nomeadamente a sua criação, alteração ou remoção é da responsabilidade do grupo **SID** da **Área ASR**.
 
 **Assim, e para a utilização do procedimento implementado no *playbook*, é essencial o pedido de uma conta ACME da *Sectigo*.**
 
-Os passos a serem seguidos para o pedido de uma dessas contas encontram-se descrito abaixo:
+Os passos a serem seguidos para o pedido de uma dessas contas encontram-se disponíveis na Secção [Pacote de ACME FCCN - Pré-Requisitos](https://share.fccn.pt/sites/rctscertificados/ACME/acme_internal_fccn/#page-toc-11).
 
-#### 1.1. Envio da mensagem de pedido de criação de conta
-A criação da conta **ACME** requer alguns pressupostos obrigatórios. 
-1. **O primeiro é que as credenciais geradas sejam transmitidas de forma segura.**
-Para isso, o requerente da conta deverá ter a utilização de certificados de assinatura de email ativa e a funcionar.
-Caso necessite, por favor consulte a [informação sobre a emissão e utilização de certificados pessoais no email](https://share.fccn.pt/sites/rctscertificados/ManualUtilizador/#page-toc-3).
-2. **O segundo pressuposto é que os domínios a serem usados devem estar já registados e validados na plataforma da Sectigo.**
-Em caso de dúvida, devem validar esse registo com a equipa de **SID**.
+#### 1.2. Outras Instituições RCTS
 
-Garantidos os pressupostos essenciais, o pedido de conta é iniciado com o envio de um e-mail para <noc@fccn.pt> indicando essa necessidade.
-O pedido de conta **ACME** deve seguir o seguinte [*template*](LINKMISSING).
-
-Importa destacar que devem ser fornecidas as informações presentes no template, nomeadamente:
-* **Área FCCN**
-* **Serviço**
-* **Domínios a associar à conta ACME**
-
-Relativamente aos domínios a associar, por questões de segurança, deve ser usado o mais específico possível dentro do serviço (por exemplo, deve ser pedido  *eduroam.fccn.pt* e não *fccn.pt*);
-<!-- * Se necessário podem indicar um wild-card de um subdomínio, evitando um domínio de topo (ex: *.eduroam.fccn.pt e não*.fccn.pt); -->
-
-#### 1.2. Criação da conta por parte da equipa de SID
-
-Ao receber o pedido de criação de conta, a equipa de **SID** irá aceder à plataforma da *Sectigo* e realizar os passos necessários para a criação da conta, tendo em consideração a informação fornecida.
-
-#### 1.3. Resposta com os dados da conta a serem usados (email cifrado e assinado)
-
-Após a criação da conta, e com os dados já presentes, a equipa de **SID** irá responder à mensagem original, indicando as credenciais *EAB* associadas a uma conta **ACME** (``hmac_id`` e ``hmac_key``).
-Recordamos que a mensagem a enviar será cifrada e portanto dirigida apenas ao requerente original.
-Se possível a mensagem recebida deverá ser eliminada após salvaguarda das credenciais em local seguro e apropriado (por exemplo, *num inventário Ansible através de Ansible-Vault, como será detalhado na secção seguinte*).
-Do lado da equipa **SID** a mensagem enviada será também eliminada, uma vez que caso seja necessário recuperar os dados de acesso à conta **ACME**, estes estão acessíveis dentro da plataforma da *Sectigo*.
+TODO
 
 ### 2. *Playbook* de Ansible
 
 #### 2.1. Inventário - Credenciais ACME
 
-O cliente de ACME (``certbot``) necessita de credenciais *EAB* associadas a uma conta ACME (``hmac_id`` e ``hmac_key``), pelo que antes da execução do pacote de *Ansible*.
+Para comunicar com a entidade certificadora da Sectigo o cliente de ACME (``certbot``) necessita de credenciais *EAB* associadas a uma conta ACME (``hmac_id`` e ``hmac_key``), pelo que antes da execução do pacote de *Ansible*.
 
-Depois de seguido o procedimento detalhado na [Secção anterior](https://share.fccn.pt/sites/rctscertificados/ACME/acme_internal_fccn/#page-toc-9), as credenciais recebidas devem ser colocadas num ficheiro *YAML*, por exemplo ``defaults/credentials.yml``, que deve ser construído seguindo a sintaxe exemplificada em ``defaults/template.yml``:
+Depois de seguido o procedimento, mencionado anteriormente, as credenciais recebidas devem ser colocadas num ficheiro *YAML*, por exemplo ``defaults/credentials.yml``, que deve ser construído seguindo a sintaxe exemplificada em ``defaults/template.yml``:
 
 Ver abaixo exemplo do ficheiro ``defaults/template.yml``:
 
@@ -70,9 +46,9 @@ As credenciais podem ser encriptadas utilizando o [*Ansible Vault*](https://docs
 
 O pacote fornecido consiste num *playbook* de *Ansible* que irá efetuar sempre as seguintes etapas:
 
-1. Instalar o *certbot* (caso não esteja já instalado)
-2. Registar o *certbot* como **cliente de ACME** na entidade certificadora da *Sectigo* com as credenciais *ACME* fornecidas (caso não esteja já registado)
-3. Pedir o(s) certificado(s) desejados
+1. Instalar o *certbot* (caso não esteja já instalado);
+2. Registar o *certbot* como **cliente de ACME** na entidade certificadora da *Sectigo* com as credenciais *ACME* fornecidas (caso não esteja já registado);
+3. Pedir o(s) certificado(s) desejados.
 
 **O *playbook* de Ansible permite que sejam fornecidos 7 argumentos:**
 

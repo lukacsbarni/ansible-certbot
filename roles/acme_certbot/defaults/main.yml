@@ -1,6 +1,6 @@
 ---
 option_multi_domain: "single-domain"
-option_credentials_file: "defaults/template"
+option_credentials_file: "defaults/template.yml"
 option_webserver: standalone
 option_encryption_algorithm: ecdsa
 option_concatenate_certs: False

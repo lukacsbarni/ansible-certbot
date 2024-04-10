@@ -4,6 +4,7 @@
   become: yes
   become_method: sudo
   vars_files:
+    - "defaults/secrets.yml"
     - "{{ option_credentials_file }}"
 
   pre_tasks:

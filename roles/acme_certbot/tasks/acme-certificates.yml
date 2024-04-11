@@ -36,7 +36,7 @@
   template:
     src: certsrenew.sh.j2
     dest: /etc/letsencrypt/renewal-hooks/deploy/certsrenew.sh
-    mode: 0664
+    mode: '0774'
   when: 
     - option_post_hook is defined
     - option_post_hook != None

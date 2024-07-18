@@ -2,11 +2,21 @@
 
 ### Prerequisites - Before running the Ansible playbook
 
-An essential element for the use of the automatic certificate management process is the existence of ACME accounts, in this case the certification entity (CA) of Sectigo .
+An essential element for the use of the automatic certificate management process is the existence of ACME accounts, in this case the certification entity (CA) of Sectigo.
 
 ### 1. Ansible Playbook
 
-#### 1.1. Inventory - ACME Credentials
+#### 1.1. Ansible Requirements
+
+Minumum ansible version: `2.13`
+[Community General.Collection] (https://docs.ansible.com/ansible/latest/collections/community/general/index.html) - `ansible-galaxy collection install community.general --force`
+
+ansible-vault encrypt secrets.yml
+ansible-playbook playbook_acme_ssl.yml --ask-vault-pass
+
+
+
+#### 1.2. Inventory - ACME Credentials
 
 To communicate with the certification authority of Sectigo, the ACME client (`certbot`) requires EAB credentials associated with an ACME account (`hmac_id` and `hmac_key`).
 

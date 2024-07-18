@@ -9,7 +9,7 @@ An essential element for the use of the automatic certificate management process
 #### 1.1. Ansible Requirements
 
 Minumum ansible version: `2.13`
-[Community General.Collection] (https://docs.ansible.com/ansible/latest/collections/community/general/index.html) - `ansible-galaxy collection install community.general --force`
+[Community General.Collection](https://docs.ansible.com/ansible/latest/collections/community/general/index.html) - `ansible-galaxy collection install community.general --force`
 
 ansible-vault encrypt secrets.yml
 ansible-playbook playbook_acme_ssl.yml --ask-vault-pass

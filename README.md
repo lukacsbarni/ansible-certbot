@@ -9,11 +9,8 @@ An essential element for the use of the automatic certificate management process
 #### 1.1. Ansible Requirements
 
 Minumum ansible version: `2.13`
+
 [Community General.Collection](https://docs.ansible.com/ansible/latest/collections/community/general/index.html) - `ansible-galaxy collection install community.general --force`
-
-ansible-vault encrypt secrets.yml
-ansible-playbook playbook_acme_ssl.yml --ask-vault-pass
-
 
 
 #### 1.2. Inventory - ACME Credentials
@@ -38,7 +35,21 @@ acme_accounts:
     mac_key: "{{ mac_key }}"
 ```
 
+See below for an example of the defaults/credentials.yml file:
+
+```yaml
+mac_id: aPxxxxxxxxxxxxxxxxxxxxxx
+mac_key: Kmxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+The credentials must be encrypted using Ansible Vault.
+
+`ansible-vault encrypt defaults/secrets.yml`
+`New Vault password:`
+`Confirm New Vault password:`
+`Encryption successful`
+
+
 The package allows for the existence of different sets of credentials (for example, associated with different services/domains), which can be placed in the credentials.yml file as a list. Each set of credentials should be associated with a name (for example, client1, client1, etc.) that will be provided at the time of package execution to choose the credentials to be used.
 
-The credentials can be encrypted using Ansible Vault.
 

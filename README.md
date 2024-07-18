@@ -93,3 +93,10 @@ The provided package consists of an Ansible playbook that will always perform th
     * *Optional (default: ``'False'``)*.
 
 
+Once the repository is cloned and the defaults/credentials.yml file is properly configured, the Ansible playbook can be executed:
+
+
+```bash
+shell> ansible-playbook playbook_acme_ssl.yml --ask-vault-pass
+```
+
